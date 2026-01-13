@@ -1,48 +1,40 @@
+// src/server.js
 const express = require("express");
 require("dotenv").config();
 
-const {
-  sequelize,
-  Cliente,
-  Produto,
-  Pedido,
-  Venda,
-  PedidoProduto
-} = require("./associations");
+const { sequelize } = require("./associations");
 
 const app = express();
 app.use(express.json());
 
-// Sincroniza models com o banco (cria/atualiza tabelas)
+// Inicializa conexão e sincroniza tabelas
 (async () => {
   try {
     await sequelize.authenticate();
-    console.log("Conexão com o banco estabelecida.");
+    console.log("✅ Conexão com o banco estabelecida.");
 
     await sequelize.sync({ alter: true });
-    console.log("Tabelas criadas/atualizadas com sucesso.");
+    console.log("✅ Tabelas criadas/atualizadas com sucesso.");
   } catch (err) {
-    console.error("Erro ao inicializar o banco:", err.message);
+    console.error("❌ Erro ao inicializar o banco:", err.message);
     process.exit(1);
   }
 })();
 
-// Rotas mínimas de teste
+// Rota de saúde (teste rápido)
 app.get("/health", (req, res) => res.json({ status: "ok" }));
 
-app.post("/produtos", async (req, res) => {
-  try {
-    const produto = await Produto.create(req.body);
-    res.status(201).json(produto);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
+// Importa e usa as rotas
+const produtosRouter = require("./routes/produtos");
+const clientesRouter = require("./routes/clientes");
+const pedidosRouter = require("./routes/pedidos");
+const vendasRouter = require("./routes/vendas");
 
-app.get("/produtos", async (req, res) => {
-  const produtos = await Produto.findAll();
-  res.json(produtos);
-});
+app.use("/produtos", produtosRouter);
+app.use("/clientes", clientesRouter);
+app.use("/pedidos", pedidosRouter);
+app.use("/vendas", vendasRouter);
 
+// Porta da aplicação
 const port = process.env.APP_PORT || 3000;
-app.listen(port, () => console.log(`Servidor rodando na porta ${port}`));
+app.listen(port, () => console.log(`🚀 Servidor rodando na porta ${port}`));
