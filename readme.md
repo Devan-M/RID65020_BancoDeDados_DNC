@@ -1,129 +1,175 @@
-Projeto DNC - Banco de Dados
+# Projeto DNC - Banco de Dados
 
 Este projeto é uma API REST desenvolvida em Node.js + Express + Sequelize para gerenciar um fluxo completo de Produtos → Clientes → Pedidos → Vendas.
 
-🚀 Tecnologias utilizadas
 
-Node.js
 
-Express
+## 🚀 Tecnologias utilizadas
 
-Sequelize (ORM)
+- Node.js
+- Express
+- Sequelize (ORM)
+- Banco de dados relacional (MySQL/PostgreSQL)
+- Dotenv para variáveis de ambiente
 
-Banco de dados relacional (MySQL/PostgreSQL)
+## 📦 Entidades e Atributos do Sistema
+O sistema de gerenciamento de vendas online foi projetado para controlar os seguintes objetos e informações:
+- Produtos
+    - id_produto (chave primária)
+    - nome
+    - descricao
+    - preco
+    - categoria
+    - quantidade_estoque
 
-Dotenv para variáveis de ambiente
+- Clientes
+    - id_cliente (chave primária)
+    - nome
+    - email
+    - telefone
+    - endereco
 
-⚙️ Instalação e execução
+- Pedidos
+    - id_pedido (chave primária)
+    - id_cliente (chave estrangeira → Clientes)
+    - data_pedido
+    - status (pendente, concluído, cancelado)
+    - itens (lista de produtos com quantidade e preço unitário)
 
-Clone o repositório:
+- Vendas
+    - id_venda (chave primária)
+    - id_pedido (chave estrangeira → Pedidos)
+    - valor_total
+    - data_venda
 
+- Estoque
+    - id_produto (chave estrangeira → Produtos)
+    - quantidade_estoque
+    - movimentacoes (entradas e saídas de produtos)
+
+
+## ⚙️ Instalação e execução
+
+1. Clone o repositório:
+```
 git clone https://github.com/seuusuario/projeto-dnc-banco-de-dados.git
 cd projeto-dnc-banco-de-dados
+```
 
-Instale as dependências:
-
+2. Instale as dependências:
+```
 npm install
-
-Configure o arquivo .env com suas credenciais do banco:
-
+```
+3. Configure o arquivo .env com suas credenciais do banco:
+```
 DB_HOST=localhost
 DB_USER=root
 DB_PASS=sua_senha
 DB_NAME=projeto_dnc
 APP_PORT=3000
-
-Inicie o servidor:
-
+```
+4. Inicie o servidor:
+```
 node src/server.js
-
-O servidor estará disponível em:
-
+```
+5. O servidor estará disponível em:
+```
 http://localhost:3000
-
-🧪 Roteiro de testes (Insomnia/Postman)
+```
+## 🧪 Roteiro de testes (Insomnia/Postman)
 
 Health check
-
+```
 GET /health → { "status": "ok" }
-
+```
 Produtos
-
+```
 POST /produtos → cria produto
-
+```
+```
 GET /produtos → lista produtos
-
+```
+```
 GET /produtos/:id → busca produto por ID
-
+```
+```
 PUT /produtos/:id → atualiza produto
-
+```
+```
 DELETE /produtos/:id → remove produto
-
+```
 Clientes
-
+```
 POST /clientes → cria cliente
-
+```
+```
 GET /clientes → lista clientes
-
+```
+```
 GET /clientes/:id → busca cliente por ID
-
+```
+```
 PUT /clientes/:id → atualiza cliente
-
+```
+```
 DELETE /clientes/:id → remove cliente
-
+```
 Pedidos
-
+```
 POST /pedidos → cria pedido com itens
-
+```
+```
 GET /pedidos/:id → detalha pedido
-
+```
 Vendas
-
+```
 POST /vendas → registra venda a partir de um pedido
-
+```
+```
 GET /vendas → lista vendas
-
-📂 Estrutura de pastas
-
+```
+## 📂 Estrutura de pastas
+```
 projeto-dnc-banco-de-dados/
-├── src/
-│   ├── config/
-│   │   └── db.js
-│   ├── models/
-│   │   ├── Cliente.js
-│   │   ├── Produto.js
-│   │   ├── Pedido.js
-│   │   ├── PedidoProduto.js
-│   │   └── Venda.js
-│   ├── routes/
-│   │   ├── clientes.js
-│   │   ├── produtos.js
-│   │   ├── pedidos.js
-│   │   └── vendas.js
-│   ├── associations.js
-│   └── server.js
-├── .env
-├── .gitignore
-└── package.json
+                          ├── src/
+                          │   ├── config/
+                          │   │   └── db.js
+                          │   ├── models/
+                          │   │   ├── Cliente.js
+                          │   │   ├── Produto.js
+                          │   │   ├── Pedido.js
+                          │   │   ├── PedidoProduto.js
+                          │   │   └── Venda.js
+                          │   ├── routes/
+                          │   │   ├── clientes.js
+                          │   │   ├── produtos.js
+                          │   │   ├── pedidos.js
+                          │   │   └── vendas.js
+                          │   ├── associations.js
+                          │   └── server.js
+                          ├── .env
+                          ├── .gitignore
+                          └── package.json
+```
+## ✅ Fluxo básico
 
-✅ Fluxo básico
+- Cadastrar produtos
 
-Cadastrar produtos
+- Cadastrar clientes
 
-Cadastrar clientes
+- Criar pedidos com itens
 
-Criar pedidos com itens
+- Registrar vendas
 
-Registrar vendas
+## 📌 Observações
 
-📌 Observações
-
-As tabelas são sincronizadas automaticamente com sequelize.sync({ alter: true }).
+As tabelas são sincronizadas automaticamente com 
+```sequelize.sync({ alter: true }).```
 
 Recomenda-se usar migrations em produção.
 
 O campo preco_unitario é gravado no momento do pedido para preservar histórico.
 
-👨‍💻 Autor
+## 👨‍💻 Autor
 
-Projeto desenvolvido por Devan como parte do curso DNC.
+Projeto desenvolvido por **Devan** como parte do curso DNC.
