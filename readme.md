@@ -47,6 +47,34 @@ O sistema de gerenciamento de vendas online foi projetado para controlar os segu
     - quantidade_estoque
     - movimentacoes (entradas e saídas de produtos)
 
+## 📊 Diagrama Entidade-Relacionamento (simplificado)
+```
+Clientes (id_cliente, nome, email, telefone, endereco)
+        │
+        │ 1:N
+        │
+Pedidos (id_pedido, id_cliente, data_pedido, status)
+        │
+        │ 1:1
+        │
+Vendas (id_venda, id_pedido, valor_total, data_venda)
+
+Produtos (id_produto, nome, descricao, preco, categoria, quantidade_estoque)
+        │
+        │ N:M
+        │
+PedidoProduto (id_pedido, id_produto, quantidade, preco_unitario)
+```
+
+## 🔎 Explicação das relações
+- Clientes → Pedidos: um cliente pode ter vários pedidos (relação 1:N).
+- Pedidos → Vendas: cada pedido gera uma única venda (relação 1:1).
+- Pedidos ↔ Produtos: relação N:M, representada pela tabela intermediária PedidoProduto, que guarda quantidade e preço unitário.
+- Produtos → Estoque: o estoque é controlado pelo atributo quantidade_estoque dentro da entidade Produto.
+
+👉 Esse diagrama em texto é simples, mas já mostra claramente como as entidades se relacionam.
+Quer que eu prepare também uma versão visual em Mermaid (Markdown) para que o GitHub renderize um diagrama gráfico direto no README?
+
 
 ## ⚙️ Instalação e execução
 
@@ -172,4 +200,4 @@ O campo preco_unitario é gravado no momento do pedido para preservar histórico
 
 ## 👨‍💻 Autor
 
-Projeto desenvolvido por **Devan** como parte do curso DNC.
+Projeto desenvolvido por **Devan M.** como parte do curso DNC.
