@@ -13,7 +13,10 @@ app.use(express.json());
     await sequelize.authenticate();
     console.log("✅ Conexão com o banco estabelecida.");
 
-    await sequelize.sync({ alter: true });
+    // Para desenvolvimento: sincroniza todas as tabelas
+    // await sequelize.sync({ alter: true }); // Sincroniza modelos com o banco
+    await sequelize.sync({ force: true }); // Cria tabelas do zero (apaga dados existentes)
+
     console.log("✅ Tabelas criadas/atualizadas com sucesso.");
   } catch (err) {
     console.error("❌ Erro ao inicializar o banco:", err.message);

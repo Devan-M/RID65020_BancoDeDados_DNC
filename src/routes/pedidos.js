@@ -1,3 +1,4 @@
+// src/routes/pedidos.js
 const express = require("express");
 const router = express.Router();
 const sequelize = require("../config/db");
@@ -16,7 +17,6 @@ const PedidoProduto = require("../models/PedidoProduto");
 //   ]
 // }
 router.post("/", async (req, res) => {
-  const t = await sequelize.transaction();
   try {
     const { id_cliente, itens } = req.body;
 
@@ -29,44 +29,55 @@ router.post("/", async (req, res) => {
       return res.status(404).json({ error: "Cliente não encontrado" });
     }
 
-    // Cria o pedido
-    const pedido = await Pedido.create(
-      { id_cliente, status: "pendente" },
-      { transaction: t }
-    );
+    // Cria transação dentro do try
+    const t = await sequelize.transaction();
 
-    // Processa itens: valida produto, estoque, grava preço unitário e baixa estoque
-    for (const item of itens) {
-      const produto = await Produto.findByPk(item.id_produto, { transaction: t });
-      if (!produto) throw new Error(`Produto ${item.id_produto} não encontrado`);
+    try {
+      // Cria o pedido
+      const pedido = await Pedido.create(
+        { id_cliente, status: "pendente" },
+        { transaction: t }
+      );
 
-      if (produto.quantidade_estoque < item.quantidade) {
-        throw new Error(`Estoque insuficiente para o produto ${produto.nome}`);
+      // Processa itens
+      for (const item of itens) {
+        const produto = await Produto.findByPk(item.id_produto, { transaction: t });
+        if (!produto) throw new Error(`Produto ${item.id_produto} não encontrado`);
+
+        if (produto.quantidade_estoque < item.quantidade) {
+          throw new Error(`Estoque insuficiente para o produto ${produto.nome}`);
+        }
+
+        // Cria relação pedido-produto
+        await PedidoProduto.create(
+          {
+            id_pedido: pedido.id_pedido,
+            id_produto: produto.id_produto,
+            quantidade: item.quantidade,
+            preco_unitario: produto.preco
+          },
+          { transaction: t }
+        );
+
+        // Atualiza estoque
+        await produto.update(
+          { quantidade_estoque: produto.quantidade_estoque - item.quantidade },
+          { transaction: t }
+        );
       }
 
-      // Cria relação pedido-produto com preço unitário atual
-      await PedidoProduto.create(
-        {
-          id_pedido: pedido.id_pedido,
-          id_produto: produto.id_produto,
-          quantidade: item.quantidade,
-          preco_unitario: produto.preco
-        },
-        { transaction: t }
-      );
-
-      // Atualiza estoque
-      await produto.update(
-        { quantidade_estoque: produto.quantidade_estoque - item.quantidade },
-        { transaction: t }
-      );
+      await t.commit();
+      return res.status(201).json({
+        message: "Pedido criado com sucesso",
+        pedido_id: pedido.id_pedido
+      });
+    } catch (err) {
+      await t.rollback();
+      return res.status(400).json({ error: err.message });
     }
 
-    await t.commit();
-    res.status(201).json({ message: "Pedido criado com sucesso", pedido_id: pedido.id_pedido });
   } catch (err) {
-    await t.rollback();
-    res.status(400).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 });
 
