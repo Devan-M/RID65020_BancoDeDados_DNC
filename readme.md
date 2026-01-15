@@ -1,15 +1,13 @@
 # Projeto DNC - Banco de Dados
 
-Este projeto é uma API REST desenvolvida em Node.js + Express + Sequelize para gerenciar um fluxo completo de Produtos → Clientes → Pedidos → Vendas.
-
-
+Este projeto foi desenvolvido como parte do desafio da DNC para modelagem de dados e criação de uma API REST utilizando Node.js, Express e Sequelize com banco de dados MySQL.
+O sistema permite o cadastro de produtos, clientes, pedidos e o registro de vendas, simulando o fluxo de uma loja online.
 
 ## 🚀 Tecnologias utilizadas
-
 - Node.js
 - Express
 - Sequelize (ORM)
-- Banco de dados relacional (MySQL/PostgreSQL)
+- Banco de dados relacional (MySQL)
 - Dotenv para variáveis de ambiente
 
 ## 📦 Entidades e Atributos do Sistema
@@ -81,6 +79,7 @@ Quer que eu prepare também uma versão visual em Mermaid (Markdown) para que o 
 1. Clone o repositório:
 ```
 git clone https://github.com/seuusuario/projeto-dnc-banco-de-dados.git
+
 cd projeto-dnc-banco-de-dados
 ```
 
