@@ -3,10 +3,20 @@
 Este projeto foi desenvolvido como parte do desafio da DNC para modelagem de dados e criação de uma API REST utilizando Node.js, Express e Sequelize com banco de dados MySQL.
 O sistema permite o cadastro de produtos, clientes, pedidos e o registro de vendas, simulando o fluxo de uma loja online.
 
+## 🛠️ Requisitos do Sistema
+Antes de rodar o projeto, certifique-se de que os seguintes requisitos estão atendidos:
+
+ ✅ Node.js instalado (versão 18 ou superior recomendada)
+ 
+ ✅ MySQL instalado e rodando localmente
+ 
+ ✅ Um banco de dados criado com o nome definido no .env (exemplo: dnc_loja)
+
+
 ## 🚀 Tecnologias utilizadas
-- Node.js
-- Express
-- Sequelize (ORM)
+ Node.js
+ Express
+ Sequelize (ORM)
 - Banco de dados relacional (MySQL)
 - Dotenv para variáveis de ambiente
 
